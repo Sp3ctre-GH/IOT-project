@@ -1,321 +1,113 @@
-Motion Sensor Monitoring System
+# Motion Sensor System
 
-This project is a motion sensor system using an ESP8266 microcontroller, a Flask server, and a web interface to monitor motion. If the main server is down, the ESP8266 acts as a backup server.
+A simple motion detection system using **ESP8266**, a **Flask server**, and a **web interface**.
 
-What is it?
+---
 
+## 🔧 What the System Does
 
+- **ESP8266**: Detects motion and controls a buzzer.
+- **Flask Server**: Stores and processes motion data.
+- **Web Interface**: Displays motion status, motion count, last motion time, and a daily activity chart (e.g., 45 motions yesterday, 67 today).
 
+---
 
+## 📦 Requirements
 
-ESP8266: Detects motion with a sensor and controls a buzzer.
+### Hardware
+- ESP8266 (e.g., NodeMCU)
+- Motion sensor (connected to **D5**)
+- Buzzer (connected to **D1**)
+- Wi-Fi network
 
+### Software
+- Arduino IDE
+- Python 3
+- Python packages:
+  ```bash
+  pip install flask requests
+  ```
+- Any modern web browser
 
+---
 
-Flask Server: Stores motion data and serves a web interface.
+## ⚙️ Setup
 
+### 1. ESP8266
+- Open `esp8266.ino` in the Arduino IDE.
+- Set the following values:
+  - `ssid` — your Wi-Fi network name
+  - `password` — your Wi-Fi password
+  - `pcServerHost` — Flask server IP (e.g., `192.168.1.100`)
+  - `ESP8266_IP` — IP address of the ESP8266 (e.g., `192.168.1.105`)
+- Upload the code to the ESP8266 board.
+- Connect:
+  - Motion sensor to **D5**
+  - Buzzer to **D1**
 
+### 2. Flask Server
+- Make sure Python 3 is installed.
+- Install required packages:
+  ```bash
+  pip install flask requests
+  ```
+- Place files as follows:
+  - `app.py` and `index.html` in the same folder
+  - `index.html` inside the `templates/` subfolder
+  - `siren.mp3` inside the `static/` folder
+- In `app.py`, set the IP of the ESP8266 (e.g., `192.168.1.105`)
+- Run the server:
+  ```bash
+  python app.py
+  ```
 
-Web Interface: Displays motion status, count, last motion time, and a daily motion count chart.
+---
 
-Features
+## 🌐 Usage
 
+### Main Page  
+**http://192.168.1.100:5000**
 
+- View motion status, count, and last motion time.
+- See a daily activity chart.
+- Control the buzzer:
+  - Test sound
+  - Activate siren
+  - Reset chart
+- The siren plays automatically after **6:00 PM** if motion is detected.
 
+### Backup Page  
+**http://192.168.1.105**
 
+- View motion status, count, and last motion time.
+- Test the buzzer manually.
 
-Real-time motion detection.
+---
 
+## 🔔 Buzzer
 
+- Automatically activates after 6:00 PM if motion is detected.
+- In test mode, it sounds for 2–3 seconds.
 
-Chart of daily motion counts.
+---
 
+## 🔄 Reset
 
+- The **"Reset Chart"** button clears the motion chart.
+- Motion count resets automatically at midnight.
 
-Buzzer control (toggle on/off, test).
+---
 
+## 🧰 Troubleshooting
 
+- **Wi-Fi issues?** Double-check `ssid` and `password` in the code.
+- **Server down?** Restart `app.py`, and make sure `siren.mp3` is accessible.
+- **No motion detected?** Check the sensor connection to pin **D5**.
+- **Buzzer not sounding?** Test via the interface and check pin **D1**.
+- **Chart not working?** Make sure `motion_history.json` is being updated.
 
-Siren plays after 6 PM when motion is detected (if buzzer is enabled).
+---
 
+## 📝 License
 
-
-Reset motion history.
-
-
-
-Backup server on ESP8266.
-
-Requirements
-
-Hardware
-
-
-
-
-
-ESP8266 (e.g., NodeMCU)
-
-
-
-Motion sensor (connected to pin D5/14)
-
-
-
-Buzzer (connected to pin D1/5)
-
-
-
-Wi-Fi network
-
-Software
-
-
-
-
-
-Arduino IDE for ESP8266
-
-
-
-Python 3.x with:
-
-
-
-
-
-Flask
-
-
-
-requests
-
-
-
-Web browser (Chrome, Firefox, etc.)
-
-
-
-Arduino libraries:
-
-
-
-
-
-ESP8266WiFi
-
-
-
-ESPAsyncWebServer
-
-
-
-ArduinoJson
-
-
-
-NTPClient
-
-
-
-WiFiUdp
-
-
-
-EEPROM
-
-
-
-ESP8266HTTPClient
-
-Setup
-
-
-
-
-
-ESP8266 Setup:
-
-
-
-
-
-Install Arduino IDE.
-
-
-
-Add required libraries via Library Manager.
-
-
-
-Open esp8266.ino and update:
-
-
-
-
-
-ssid: Your Wi-Fi network name.
-
-
-
-password: Your Wi-Fi password.
-
-
-
-pcServerHost: Flask server IP (e.g., 192.168.1.100).
-
-
-
-ESP8266_IP: ESP8266 IP (e.g., 192.168.1.105).
-
-
-
-Upload the code to the ESP8266.
-
-
-
-Connect the motion sensor to D5 and buzzer to D1.
-
-
-
-Flask Server Setup:
-
-
-
-
-
-Install Python 3.x.
-
-
-
-Install dependencies:
-
-pip install flask requests
-
-
-
-Place app.py and index.html in the same folder, with index.html in a templates folder.
-
-
-
-Add siren.mp3 to a static folder.
-
-
-
-Update ESP8266_IP in app.py to match the ESP8266 IP.
-
-
-
-Run the server:
-
-python app.py
-
-
-
-Access the Interface:
-
-
-
-
-
-Open http://<Flask-Server-IP>:5000 (e.g., http://192.168.1.100:5000).
-
-
-
-If the server is down, use http://<ESP8266-IP> (e.g., http://192.168.1.105).
-
-Usage
-
-
-
-
-
-Main Interface (http://<Flask-Server-IP>:5000):
-
-
-
-
-
-Shows motion status, count, and last motion time.
-
-
-
-Displays a chart of daily motion counts.
-
-
-
-Buttons to toggle/test the buzzer, test the siren, or reset the chart.
-
-
-
-Siren plays after 6 PM if motion is detected and buzzer is enabled.
-
-
-
-Backup Interface (http://<ESP8266-IP>):
-
-
-
-
-
-Shows motion status, count, and last motion time.
-
-
-
-Allows buzzer toggle and test.
-
-
-
-Redirects to the main server if it becomes available.
-
-
-
-Buzzer:
-
-
-
-
-
-Activates after 6 PM with motion (if enabled).
-
-
-
-Test plays for 2 seconds (ESP8266) or 3 seconds (siren).
-
-
-
-Reset:
-
-
-
-
-
-"Reset Chart" clears motion history.
-
-
-
-Motion count resets at midnight.
-
-Troubleshooting
-
-
-
-
-
-ESP8266 Wi-Fi issues: Check ssid and password.
-
-
-
-Server not working: Ensure app.py is running and siren.mp3 is in static.
-
-
-
-No motion detected: Verify sensor connection on D5.
-
-
-
-Buzzer silent: Check D1 connection and test via the interface.
-
-
-
-Chart issues: Ensure motion_history.json is writable.
+This project is licensed under the **MIT License**. See the `LICENSE` file.
