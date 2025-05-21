@@ -1,58 +1,62 @@
-<div style="text-align: left;">
+# Motion Sensor Monitoring System
 
-# ESP and Flask Buzzer Control Project
+This project is a motion sensor system using an ESP8266 microcontroller, a Flask server, and a web interface to monitor motion. If the main server is down, the ESP8266 acts as a backup server.
 
-This project consists of two main components: an ESP-based firmware for controlling an active buzzer and a Flask backend server to manage the buzzer remotely via API.
+## What is it?
+
+- **ESP8266**: Detects motion with a sensor and controls a buzzer.
+- **Flask Server**: Stores motion data and serves a web interface.
+- **Web Interface**: Displays motion status, count, last motion time, and a daily motion count chart.
 
 ## Features
-- **ESP Firmware**: Controls an active buzzer (e.g., KY-012 module) using an ESP microcontroller.
-- **Flask Backend**: Provides RESTful API endpoints to interact with the buzzer and retrieve data.
-- **API Endpoints**:
-  - `/data`: Retrieve data in JSON format.
-  - `/buzzer`: Turn the buzzer on or off.
-  - `/history`: View the history of buzzer actions.
-- **Database Support**: Uses SQLite for local testing and PostgreSQL for production.
+
+- Real-time motion detection.
+- Chart of daily motion counts.
+- Buzzer control (toggle on/off, test).
+- Siren plays after 6 PM when motion is detected (if buzzer is enabled).
+- Reset motion history.
+- Backup server on ESP8266.
 
 ## Requirements
-- **ESP Firmware**:
-  - ESP32 or ESP8266 microcontroller
-  - Active buzzer (e.g., KY-012)
-  - Arduino IDE or PlatformIO for uploading the code
-- **Flask Backend**:
-  - Python 3.8+
-  - Flask, Flask-SQLAlchemy, and other dependencies (see `requirements.txt`)
-  - SQLite or PostgreSQL database
 
-## Installation
-1. **ESP Firmware**:
-   - Clone this repository.
-   - Open the `esp` folder in your IDE.
-   - Upload the code to your ESP device.
-2. **Flask Backend**:
-   - Clone this repository.
-   - Navigate to the `server` folder.
-   - Install dependencies: `pip install -r requirements.txt`.
-   - Set up the database (SQLite or PostgreSQL) and update the connection string in the configuration.
-   - Run the server: `python main.py`.
+### Hardware
 
-## Usage
-- **ESP**: After uploading the firmware, the ESP will connect to the specified server and listen for buzzer commands.
-- **Flask Server**:
-  - Start the server and access the API endpoints.
-  - Example: Send a POST request to `/buzzer` to activate the buzzer.
+- ESP8266 (e.g., NodeMCU)
+- Motion sensor (connected to pin D5/14)
+- Buzzer (connected to pin D1/5)
+- Wi-Fi network
 
-## Project Structure
-- `/esp`: Contains the ESP firmware code.
-- `/server`: Contains the Flask backend code.
-  - `main.py`: Main Flask application.
-  - `/routes`: API route definitions.
+### Software
 
-## Future Improvements
-- Add authentication for API endpoints.
-- Implement scalability features using Gunicorn and Nginx.
-- Expand the history endpoint with pagination.
+- Arduino IDE for ESP8266
+- Python 3.x with:
+  - `Flask`
+  - `requests`
+- Web browser (Chrome, Firefox, etc.)
+- Arduino libraries:
+  - `ESP8266WiFi`
+  - `ESPAsyncWebServer`
+  - `ArduinoJson`
+  - `NTPClient`
+  - `WiFiUdp`
+  - `EEPROM`
+  - `ESP8266HTTPClient`
 
-## License
-This project is licensed under the MIT License.
+## Setup
 
-</div>
+1. **ESP8266 Setup**:
+   - Install Arduino IDE.
+   - Add required libraries via Library Manager.
+   - Open `esp8266.ino` and update:
+     - `ssid`: Your Wi-Fi network name.
+     - `password`: Your Wi-Fi password.
+     - `pcServerHost`: Flask server IP (e.g., `192.168.1.100`).
+     - `ESP8266_IP`: ESP8266 IP (e.g., `192.168.1.105`).
+   - Upload the code to the ESP8266.
+   - Connect the motion sensor to D5 and buzzer to D1.
+
+2. **Flask Server Setup**:
+   - Install Python 3.x.
+   - Install dependencies:
+     ```bash
+     pip install flask requests
